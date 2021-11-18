@@ -127,30 +127,39 @@ void main(){
 
     float p = dot(uv, unitDir);
 
-    float pb = floor(p * 22.0) / 5.0;
-    float bb = .35 + pb * 0.75;
-
-    float backgroundPos = 0.25 + p * 3.0 + uv.x * noise(time / 4.0) * 0.2 + uv.y * noise(time / 2.0 + 35.3818) * 0.2;
+    float band = floor(uv.y * 6.0);
+    float backgroundPos;
+    if(band == 0.0) {
+     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.3;
+    } else if (band == 1.0) {
+     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.4;
+    } else if (band == 2.0) {
+     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.5;
+    } else if (band == 3.0) {
+     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.6;
+    } else if (band == 4.0) {
+     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.7;
+    } else {
+     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.8;
+    
+    }
     vec3 background = hsb2rgb(vec3(backgroundPos,1.0,0.6));
 
-    float tl = -time / 3.0;
-    float r = -PI/4.0;
-    vec2 nv = rot(uv, r);
+    float twinkle = randomv(uv_grid);
+    twinkle = noise(twinkle * 5.0 + time / 2.0);
+    float pct = sin(twinkle * 2.0 * PI) * 0.8 + 1.0 + 0.2 * noise(time / 2.0);
 
-    for (float i = -6.0; i < 7.0; i++) {
-        float t = 0.25 * i + sin(tl) * noise(tl) * 0.2 ;
-        vec2 gv = translate(nv, vec2(t));
-        float y = sin(nv.x * PI * (sin(tl * 1.2 + PI) + noise(tl * .978 + 0.25)*0.25) * 3.0) *
-            (sin(tl * .915 + PI / 2.0)* .35 + noise(tl* .7894 + 0.5)*0.25) * 0.2;
-        float pct = plot(gv,y, .1 + noise(tl* .8975)*0.05) * 2.0;
-        color +=  background * vec3(pct);
+    vec3 c;
+    if (pct > 1.0) {
+        c = background;
+    } else if (pct > 0.0) {
+        c = mix(vec3(0.0, 0.0, 0.0), background, pct);
+    } else {
+        c = vec3(0, 0, 0);
     }
 
+    color = c;
 
-    vec2 a = vec2(1.2) - vec2(fract(-tl / 2.0))* 1.5;
-    vec2 b = vec2(1.0) - vec2(fract(-tl / 2.0))* 1.8;
-
-    float l = drawLine(uv, a, b, 1.0);
 
     gl_FragColor = vec4(color, 1.0);
 
