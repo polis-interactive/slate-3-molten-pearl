@@ -49,7 +49,7 @@ void main(){
 
 	vec3 color = vec3(0.0);
 
-    float pct = -uv.x / 4.0 + time / 4.0;
+    float pct = -uv.x / 2.0 + time / 4.0;
 
     color = hsb2rgb(vec3(pct,1.0,0.6));
     
