@@ -14,8 +14,18 @@ precision highp float;
 
 #endif
 
+#define PI 3.1415926538
+
 uniform float time;
 uniform vec2 resolution;
+
+float rand(float n){return fract(sin(n) * 43758.5453123);}
+
+float noise(float p){
+    float fl = floor(p);
+  float fc = fract(p);
+    return mix(rand(fl), rand(fl + 1.0), fc);
+}
 
 vec3 rgb2hsb( in vec3 c ){
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -42,18 +52,22 @@ vec3 hsb2rgb( in vec3 c ){
     return c.z * mix(vec3(1.0), rgb, c.y);
 }
 
+vec2 dir = vec2(4, 5);
+
 
 void main(){
 
     vec2 uv = gl_FragCoord.xy / resolution.xy;
 
-	vec3 color = vec3(0.0);
+    vec3 color = vec3(0.0);
 
-    float pct = -uv.y / 4.0 + time / 4.0;
+    float pos = dot(uv, dir) / dot(dir, dir);
 
-    color = hsb2rgb(vec3(pct,1.0,0.6));
+    float c = 0.1 + pos * 4.0 + noise(time)*0.3;
+    vec3 background = hsb2rgb(vec3(c * 1.0,1.0,0.6));
+
+    color = background;
     
     gl_FragColor = vec4(color, 1.0);
-
 
 }
