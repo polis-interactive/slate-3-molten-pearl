@@ -79,32 +79,19 @@ float rnd(int i, int j)
   return noisev(vec2(i, j));
 }
 
-
-float DuneStripes (vec2 uv, float d, float freq, float time)
-{
-  float hv = 0.;
-  for (int i=0; i<GABOR_BLOBS_NB; i++) 
-  {
-    vec2 pos = vec2(rnd(i,0), rnd(i,1));
-    vec2 dir = (.15+d)*vec2(rnd(i,2),rnd(i,3)) - d;
-    hv += GABOR_BLOBS_SIZE * sin(dot(uv-pos, freq*dir) * 6. + time);
-  }
-  return hv;
-}
-
-
-
-
 void main(){
 
     vec2 uv = gl_FragCoord.xy / resolution.xy;
+    vec2 uv_grid = floor(vec2(uv.x * 28.0, uv.y * 35.0)) / vec2(28.0, 35.0);
 
     vec3 color = vec3(0.0);
 
     vec2 unitDir = dir / dot(dir, dir);
 
-    float backgroundPos = dot(uv, unitDir);
-    backgroundPos = 0.1 + backgroundPos * 4.0 + noise(time)*0.3;
+    float p = dot(uv_grid, unitDir);
+
+
+    float backgroundPos = 0.25 + p * 3 + uv.x * noise(time / 4.0) * 0.25 + uv.y * noise(time / 2.0) * 0.25;
     vec3 background = hsb2rgb(vec3(backgroundPos * 1.0,1.0,0.6));
 
     color = background;
