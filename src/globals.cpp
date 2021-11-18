@@ -43,7 +43,16 @@ namespace globals {
 	};
 
 	std::vector<ofPoint> disallowed_positions = {
-
+		/* middle, by y*/
+		ofPoint(2, 2), ofPoint(3, 2), ofPoint(4, 2), 
+			ofPoint(9, 2), ofPoint(10, 2), ofPoint(11, 2),
+			ofPoint(19, 2), ofPoint(20, 2), ofPoint(21, 2), ofPoint(22, 2),
+		ofPoint(2, 3), ofPoint(3, 3), ofPoint(4, 3), ofPoint(5, 3),
+			ofPoint(9, 3), ofPoint(10, 3), ofPoint(11, 3), ofPoint(12, 3),
+			ofPoint(20, 3), ofPoint(21, 3), ofPoint(22, 3),
+		ofPoint(2, 4), ofPoint(3, 4), ofPoint(4, 4), ofPoint(5, 4), ofPoint(6, 4),
+			ofPoint(10, 4), ofPoint(11, 4), ofPoint(12, 4),
+			ofPoint(20, 4), ofPoint(21, 4), ofPoint(22, 4),
 	};
 
 	std::vector<ofPoint> permaoff_positions = {
