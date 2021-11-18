@@ -49,12 +49,8 @@ void main(){
 
 	vec3 color = vec3(0.0);
 
-    float pct = -uv.x - pow(sin(uv.y + time / 2.0), 2.0) + time / 10.0;
+    float pct = -uv.x / 4.0 + time / 4.0;
 
-    pct = pow(sin(pct), 2.0) * 0.5 + 0.1;
-
-    // We map x (0.0 - 1.0) to the hue (0.0 - 1.0)
-    // And the y (0.0 - 1.0) to the brightness
     color = hsb2rgb(vec3(pct,1.0,0.6));
     
     gl_FragColor = vec4(color, 1.0);
