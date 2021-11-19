@@ -126,8 +126,8 @@ void main(){
     vec3 background = hsb2rgb(vec3(backgroundPos,1.0,1.0));
 
     float twinkle = randomv(uv_grid);
-    twinkle = noise(twinkle * 2.0 + time / 4.0 * uv_grid.x + time / 4.0 * uv_grid.y + uv_grid.y * uv_grid.x);
-    float pct = sin(twinkle * 2.0 * PI) * 0.8 + 1.0 + 0.1 * noise(time / 4.0);
+    twinkle = noise(twinkle * 2.0 + time / 4.0 + noise(uv_grid.x)  + noise(uv_grid.y) + noise(uv_grid.y * uv_grid.x));
+    float pct = sin(twinkle * 2.0 * PI) * 1.2 + 1.0 + 0.1 * noise(time / 4.0 + noise(uv_grid.x)  + noise(uv_grid.y) + noise(uv_grid.y * uv_grid.x));
 
     vec3 c;
     if (pct > 1.0) {
@@ -139,37 +139,6 @@ void main(){
     }
 
     color = c;
-
-    float tx = time / 5.0;
-
-    for (float x = -2.0; x < 3.0; x++) {
-        for (float y = -2.0; y < 3.0; y++ ) {
-            float tf = floor(tx / 4.0);
-            float tm = mod(tx, 4.0);
-            float r = rnd(x * floor(tx / 4.0), y * floor(tx / 4.0))* 3.0;
-            float to = tm;
-            float tr = to + noise(r*to) * 0.1 + sin(to * r * PI) * 0.05;
-            float sxa = .4 + 0.05 * noise(r + 1.2523);
-            float sxb = .4 + 0.05 * noise(r + 2.8);
-            float sya = .4 + 0.05 * noise(r + 83.83);
-            float syb = .4 + 0.05 * noise(r + 27.123);
-            vec2 a = vec2(
-                2.6 - sxa * x - tr,
-                2.6 - sya * y - tr
-            );
-            vec2 b = vec2(
-                2.4 - sxb * x - tr,
-                2.4 - syb * y - tr
-            );
-            float l = drawLine(
-                uv + vec2(
-                    sin(r*tr * PI * 2.0)*0.05 , 
-                    cos(r*tr * PI * 2.0)*0.05 
-                ), a, b, 0.06);
-            color -= l;
-        }
-    }
-
 
 
 
