@@ -59,10 +59,10 @@ namespace globals {
 		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_0, ofPoint(30, 5)),
 
 		/* bottom face */
-		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_270, ofPoint(1, 11)),
-		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_270, ofPoint(1, 4)),
-		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_90, ofPoint(0, 4)),
-		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_90, ofPoint(0, 11)),
+		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_270, ofPoint(11, 1)),
+		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_270, ofPoint(4, 1)),
+		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_90, ofPoint(4, 0)),
+		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_90, ofPoint(11, 0)),
 
 
 	};
