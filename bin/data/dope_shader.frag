@@ -137,21 +137,48 @@ void main(){
     }
 
     float tx = time / 8.0;
+    float sx = .25;
+    float sy = .25;
 
-    for (float x = -8.0; x < 8.0; x++) {
-        for (float y = -12.0; y < 12.0; y++ ) {
-            float r = rnd(x, y)* 3.0;
+    float l;
+    vec2 off;
+
+    for (float x = -0.0; x < 4.0; x++) {
+        for (float y = -0.0; y < 4.0; y++ ) {
+            float sxx = sx * x;
+            float syy = sy * y;
+            float r = rnd(x, y) * 2.0;
+            float tm = tx;
             vec2 a = vec2(
-                2.0 - .25 * x - mod(tx, 2.0),
-                2.0 - .25 * y - mod(tx, 2.0)
+                mod(0.7 - sxx - tm, 1.0),
+                mod(0.7 - syy - tm, 1.0)
             );
             vec2 b = vec2(
-                1.8 - 0.25 * x - mod(tx, 2.0),
-                1.8 - 0.25 * y - mod(tx, 2.0)
+                mod(0.5 - sxx - tm , 1.0),
+                mod(0.5 - syy - tm, 1.0)
             );
-            float l = drawLine(uv, a, b, 0.04);
-            float dTl = 1.0 - distance(b, uv) * 5.0 + 0.2 * noise(tx + r);
-            color += l*background * dTl;
+            if (b.x > a.x || b.y > a.y) {
+                if (x == y) {
+                    l = drawLine(uv, a, vec2(0.0), 0.03);
+                    color += l*background;
+                    l = drawLine(uv, vec2(1.0), b, 0.03);
+                    color += l*background;
+                } else if (a.x < a.y) {
+                    l = drawLine(uv, a, vec2(0.0, a.y - a.x / tan(PI / 4.0)), 0.03);
+                    color += l*background;
+                    l = drawLine(uv, vec2(1.0, b.y + (1.0 - b.x) * tan(PI/4.0)), b, 0.03);
+                    color += l*background;
+                } else {
+                    l = drawLine(uv, a, vec2(a.x - a.y / tan(PI/4.0), 0.0), 0.03);
+                    color += l*background;
+                    l = drawLine(uv, vec2(b.x + (1.0 - b.y) * tan(PI/4.0), 1.0), b, 0.03);
+                    color += l*background;
+                }
+            } else {
+                float l = drawLine(uv, a, b, 0.03);
+                color += l*background;
+            }
+
         }
     }
 
