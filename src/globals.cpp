@@ -58,6 +58,13 @@ namespace globals {
 		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_0, ofPoint(30, 12)),
 		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_0, ofPoint(30, 5)),
 
+		/* bottom face */
+		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_270, ofPoint(1, 11)),
+		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_270, ofPoint(1, 4)),
+		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_90, ofPoint(0, 4)),
+		BoardConfiguration(BoardType::BOARD_1X7, BoardOrientation::ORIENT_90, ofPoint(0, 11)),
+
+
 	};
 
 	std::vector<ofPoint> disallowed_positions = {
