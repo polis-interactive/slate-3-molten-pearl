@@ -71,7 +71,7 @@ float noisev(vec2 n) {
   return mix(mix(randomv(b), randomv(b + d.yx), f.x), mix(randomv(b + d.xy), randomv(b + d.yy), f.x), f.y);
 }
 
-float rnd(int i, int j)
+float rnd(float i, float j)
 {
   return noisev(vec2(i, j));
 }
@@ -89,7 +89,7 @@ float drawLine(vec2 uv, vec2 p1, vec2 p2, float thickness) {
   // median to (p1, p2) vector
   float h = 2.0 / c * sqrt( p * ( p - a) * ( p - b) * ( p - c));
 
-  return mix(1.0, 0.0, smoothstep(0.5 * thickness, 1.5 * thickness, h));
+  return mix(1.0, 0.0, step(thickness, h));
 }
 
 
@@ -102,13 +102,6 @@ vec2 translate(vec2 uv, vec2 t) {
     return uv - t;
 }
 
-float snow(vec2 uv) {
-    float d = length(uv);
-    float m = 0.05 / d;
-    
-    m *= smoothstep(0.1, .0, d);
-    return m;
-}
 
 float plot(vec2 st, float pct, float thickness){
   return  smoothstep( pct-thickness,  pct, st.y) -
@@ -127,27 +120,12 @@ void main(){
 
     float p = dot(uv, unitDir);
 
-    float band = floor(uv.y * 6.0);
-    float backgroundPos;
-    if(band == 0.0) {
-     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.3;
-    } else if (band == 1.0) {
-     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.4;
-    } else if (band == 2.0) {
-     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.5;
-    } else if (band == 3.0) {
-     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.6;
-    } else if (band == 4.0) {
-     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.7;
-    } else {
-     backgroundPos = pow(sin(time / 2.0 + uv.x), 2.0) * 0.4 + 0.8;
-    
-    }
+    float backgroundPos = 0.25 + p * 3.0 + uv.x * noise(time / 4.0) * 0.2 + uv.y * noise(time / 2.0 + 35.3818) * 0.2;
     vec3 background = hsb2rgb(vec3(backgroundPos,1.0,0.6));
 
     float twinkle = randomv(uv_grid);
     twinkle = noise(twinkle * 5.0 + time / 2.0);
-    float pct = sin(twinkle * 2.0 * PI) * 0.8 + 1.0 + 0.2 * noise(time / 2.0);
+    float pct = sin(twinkle * 2.0 * PI) * 0.8 + 1.0 + 0.1 * noise(time / 2.0);
 
     vec3 c;
     if (pct > 1.0) {
@@ -158,7 +136,27 @@ void main(){
         c = vec3(0, 0, 0);
     }
 
-    color = c;
+    float tx = time / 8.0;
+
+    for (float x = -8.0; x < 8.0; x++) {
+        for (float y = -12.0; y < 12.0; y++ ) {
+            float r = rnd(x, y)* 3.0;
+            vec2 a = vec2(
+                2.0 - .25 * x - mod(tx, 2.0),
+                2.0 - .25 * y - mod(tx, 2.0)
+            );
+            vec2 b = vec2(
+                1.8 - 0.25 * x - mod(tx, 2.0),
+                1.8 - 0.25 * y - mod(tx, 2.0)
+            );
+            float l = drawLine(uv, a, b, 0.04);
+            float dTl = 1.0 - distance(b, uv) * 5.0 + 0.2 * noise(tx + r);
+            color += l*background * dTl;
+        }
+    }
+
+
+
 
 
     gl_FragColor = vec4(color, 1.0);
