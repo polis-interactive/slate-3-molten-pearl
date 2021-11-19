@@ -89,7 +89,9 @@ float drawLine(vec2 uv, vec2 p1, vec2 p2, float thickness) {
   // median to (p1, p2) vector
   float h = 2.0 / c * sqrt( p * ( p - a) * ( p - b) * ( p - c));
 
-  return mix(1.0, 0.0, smoothstep(0.0, 1.5 * thickness, h));
+  float d = abs( c / 2.0  - (b - h));
+
+  return mix(1.0, 0.0, smoothstep(0.0 , 2.5 * thickness, h+d));
 }
 
 
@@ -124,8 +126,8 @@ void main(){
     vec3 background = hsb2rgb(vec3(backgroundPos,1.0,1.0));
 
     float twinkle = randomv(uv_grid);
-    twinkle = noise(twinkle * 5.0 + time / 2.0);
-    float pct = sin(twinkle * 2.0 * PI) * 0.8 + 1.0 + 0.1 * noise(time / 2.0);
+    twinkle = noise(twinkle * 2.0 + time / 4.0 * uv_grid.x + time / 4.0 * uv_grid.y + uv_grid.y * uv_grid.x);
+    float pct = sin(twinkle * 2.0 * PI) * 0.8 + 1.0 + 0.1 * noise(time / 4.0);
 
     vec3 c;
     if (pct > 1.0) {
@@ -136,28 +138,35 @@ void main(){
         c = vec3(0, 0, 0);
     }
 
-    float tx = time / 4.0;
+    color = c;
 
-    for (float x = -8.0; x < 8.0; x++) {
-        for (float y = -10.0; y < 10.0; y++ ) {
-            float r = rnd(x, y)* 3.0;
-            float to = mod(tx, 3.0);
+    float tx = time / 5.0;
+
+    for (float x = -2.0; x < 3.0; x++) {
+        for (float y = -2.0; y < 3.0; y++ ) {
+            float tf = floor(tx / 4.0);
+            float tm = mod(tx, 4.0);
+            float r = rnd(x * floor(tx / 4.0), y * floor(tx / 4.0))* 3.0;
+            float to = tm;
             float tr = to + noise(r*to) * 0.1 + sin(to * r * PI) * 0.05;
+            float sxa = .4 + 0.05 * noise(r + 1.2523);
+            float sxb = .4 + 0.05 * noise(r + 2.8);
+            float sya = .4 + 0.05 * noise(r + 83.83);
+            float syb = .4 + 0.05 * noise(r + 27.123);
             vec2 a = vec2(
-                2.0 - .25 * x - tr,
-                2.0 - .25 * y - tr
+                2.6 - sxa * x - tr,
+                2.6 - sya * y - tr
             );
             vec2 b = vec2(
-                1.8 - 0.25 * x - tr,
-                1.8 - 0.25 * y - tr
+                2.4 - sxb * x - tr,
+                2.4 - syb * y - tr
             );
             float l = drawLine(
                 uv + vec2(
-                    sin(r*tr * PI * 2)*0.05 , 
-                    cos(r*tr * PI * 2)*0.05 
-                ), a, b, 0.04);
-            float dTl = 1.0 - distance(b, uv) * 6.0;
-            color += l*background * dTl;
+                    sin(r*tr * PI * 2.0)*0.05 , 
+                    cos(r*tr * PI * 2.0)*0.05 
+                ), a, b, 0.06);
+            color -= l;
         }
     }
 
