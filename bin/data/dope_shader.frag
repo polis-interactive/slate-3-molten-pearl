@@ -89,7 +89,7 @@ float drawLine(vec2 uv, vec2 p1, vec2 p2, float thickness) {
   // median to (p1, p2) vector
   float h = 2.0 / c * sqrt( p * ( p - a) * ( p - b) * ( p - c));
 
-  return mix(1.0, 0.0, step(thickness, h));
+  return mix(1.0, 0.0, smoothstep(0.0, 1.5 * thickness, h));
 }
 
 
@@ -121,7 +121,7 @@ void main(){
     float p = dot(uv, unitDir);
 
     float backgroundPos = 0.25 + p * 3.0 + uv.x * noise(time / 4.0) * 0.2 + uv.y * noise(time / 2.0 + 35.3818) * 0.2;
-    vec3 background = hsb2rgb(vec3(backgroundPos,1.0,0.6));
+    vec3 background = hsb2rgb(vec3(backgroundPos,1.0,1.0));
 
     float twinkle = randomv(uv_grid);
     twinkle = noise(twinkle * 5.0 + time / 2.0);
@@ -136,49 +136,28 @@ void main(){
         c = vec3(0, 0, 0);
     }
 
-    float tx = time / 8.0;
-    float sx = .25;
-    float sy = .25;
+    float tx = time / 4.0;
 
-    float l;
-    vec2 off;
-
-    for (float x = -0.0; x < 4.0; x++) {
-        for (float y = -0.0; y < 4.0; y++ ) {
-            float sxx = sx * x;
-            float syy = sy * y;
-            float r = rnd(x, y) * 2.0;
-            float tm = tx;
+    for (float x = -8.0; x < 8.0; x++) {
+        for (float y = -10.0; y < 10.0; y++ ) {
+            float r = rnd(x, y)* 3.0;
+            float to = mod(tx, 3.0);
+            float tr = to + noise(r*to) * 0.1 + sin(to * r * PI) * 0.05;
             vec2 a = vec2(
-                mod(0.7 - sxx - tm, 1.0),
-                mod(0.7 - syy - tm, 1.0)
+                2.0 - .25 * x - tr,
+                2.0 - .25 * y - tr
             );
             vec2 b = vec2(
-                mod(0.5 - sxx - tm , 1.0),
-                mod(0.5 - syy - tm, 1.0)
+                1.8 - 0.25 * x - tr,
+                1.8 - 0.25 * y - tr
             );
-            if (b.x > a.x || b.y > a.y) {
-                if (x == y) {
-                    l = drawLine(uv, a, vec2(0.0), 0.03);
-                    color += l*background;
-                    l = drawLine(uv, vec2(1.0), b, 0.03);
-                    color += l*background;
-                } else if (a.x < a.y) {
-                    l = drawLine(uv, a, vec2(0.0, a.y - a.x / tan(PI / 4.0)), 0.03);
-                    color += l*background;
-                    l = drawLine(uv, vec2(1.0, b.y + (1.0 - b.x) * tan(PI/4.0)), b, 0.03);
-                    color += l*background;
-                } else {
-                    l = drawLine(uv, a, vec2(a.x - a.y / tan(PI/4.0), 0.0), 0.03);
-                    color += l*background;
-                    l = drawLine(uv, vec2(b.x + (1.0 - b.y) * tan(PI/4.0), 1.0), b, 0.03);
-                    color += l*background;
-                }
-            } else {
-                float l = drawLine(uv, a, b, 0.03);
-                color += l*background;
-            }
-
+            float l = drawLine(
+                uv + vec2(
+                    sin(r*tr * PI * 2)*0.05 , 
+                    cos(r*tr * PI * 2)*0.05 
+                ), a, b, 0.04);
+            float dTl = 1.0 - distance(b, uv) * 6.0;
+            color += l*background * dTl;
         }
     }
 
