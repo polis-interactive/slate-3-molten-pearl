@@ -1,6 +1,8 @@
 
 ## Pi Install
 
+- install git
+    - remember to bring over the dummy pi key to get pull with
 - Install Go
     - https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/
     - Install armv6l
@@ -12,4 +14,8 @@
 - Add go path to sudo
     - visudo, add secure_path="...:/usr/local/go/bin"
 - Build
-    - go build ./cmd/runApplication/main.go 
+    - go build ./cmd/runApplication/main.go
+- Make autostart
+    - copy over script_autostart.sh to /home/pi/bin
+    - chmod +x /home/pi/bin/script_autostart.sh
+    - add to rc.local
