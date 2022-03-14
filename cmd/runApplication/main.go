@@ -12,8 +12,6 @@ import (
 	"time"
 )
 
-
-
 func main() {
 	conf := &application.Config{
 		LightingConfig: &application.LightingConfig{
@@ -25,16 +23,16 @@ func main() {
 			RenderFrequency: 33 * time.Millisecond,
 		},
 		Ws2812Config: &application.Ws2812Config{
-			GpioPin:   types.GpioPinTypes.GPIO18,
+			GpioPin:   types.GpioPinTypes.GPIO19,
 			StripType: types.StripTypes.WS2811GRB,
 			Gamma:     1.2,
 		},
 		GraphicsConfig: &application.GraphicsConfig{
-			ShaderName: "slate-3",
+			ShaderName:     "slate-3",
 			ReloadOnUpdate: false,
-			DisplayOutput: false,
-			PixelSize: 1,
-			Frequency: 33 * time.Millisecond,
+			DisplayOutput:  false,
+			PixelSize:      1,
+			Frequency:      33 * time.Millisecond,
 		},
 	}
 
@@ -62,4 +60,3 @@ func main() {
 		log.Println("Main: issue shutting down; ", err)
 	}
 }
-
