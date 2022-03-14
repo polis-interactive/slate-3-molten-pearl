@@ -20,12 +20,12 @@ func main() {
 		},
 		RenderConfig: &application.RenderConfig{
 			RenderType:      domain.RenderTypes.WS2812,
-			RenderFrequency: 33 * time.Millisecond,
+			RenderFrequency: 50 * time.Millisecond,
 		},
 		Ws2812Config: &application.Ws2812Config{
 			GpioPin:   types.GpioPinTypes.GPIO19,
 			StripType: types.StripTypes.WS2811GRB,
-			Gamma:     1.2,
+			Gamma:     1,
 		},
 		GraphicsConfig: &application.GraphicsConfig{
 			ShaderName:     "slate-3",
